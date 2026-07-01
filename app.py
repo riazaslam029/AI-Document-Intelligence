@@ -5,77 +5,79 @@ from utils.file_handler import save_uploaded_file
 from utils.pdf_loader import extract_pdf_text
 from services.summarizer import summarize_text
 
-# -----------------------------
+# =====================================================
 # Page Configuration
-# -----------------------------
+# =====================================================
 st.set_page_config(
     page_title="AI Document Intelligence",
     page_icon="📄",
     layout="wide"
 )
 
-# -----------------------------
+# =====================================================
 # Sidebar
-# -----------------------------
+# =====================================================
 st.sidebar.title("📚 AI Document Intelligence")
 st.sidebar.markdown("---")
 
 menu = st.sidebar.radio(
     "Navigation",
     [
-        "Home",
-        "Upload Document",
-        "About"
+        "🏠 Home",
+        "📤 Upload Document",
+        "ℹ️ About"
     ]
 )
 
-# -----------------------------
+# =====================================================
 # Home Page
-# -----------------------------
-if menu == "Home":
+# =====================================================
+if menu == "🏠 Home":
 
     st.title("📄 AI Document Intelligence Suite")
 
     st.markdown("""
-Welcome!
+Welcome to **AI Document Intelligence Suite**.
 
-This application can analyze documents using AI.
+Analyze documents using the power of **Google Gemini AI**.
 
 ### 🚀 Features
 
 - 📄 PDF Reader
-- 📝 DOCX Reader
-- 🖼 Image OCR
+- 📝 DOCX Reader *(Coming Soon)*
+- 🖼 Image OCR *(Coming Soon)*
 - 🤖 AI Summarization
-- 💬 Ask Questions
-- 🧠 Flashcards
-- ✅ MCQ Generator
-- 🌍 Translation
-- 🔑 Keyword Extraction
+- 💬 Ask Questions *(Coming Soon)*
+- 🧠 Flashcards *(Coming Soon)*
+- ✅ MCQ Generator *(Coming Soon)*
+- 🌍 Translation *(Coming Soon)*
+- 🔑 Keyword Extraction *(Coming Soon)*
 """)
 
-# -----------------------------
+# =====================================================
 # Upload Page
-# -----------------------------
-elif menu == "Upload Document":
+# =====================================================
+elif menu == "📤 Upload Document":
 
     st.title("📤 Upload Document")
 
     st.write("Upload a PDF, DOCX, or Image file.")
 
     uploaded_file = st.file_uploader(
-        "Choose a file",
+        "Choose a document",
         type=["pdf", "docx", "png", "jpg", "jpeg"]
     )
 
     if uploaded_file is not None:
 
-        # Save the uploaded file
+        # Save uploaded file
         file_path = save_uploaded_file(uploaded_file)
 
         st.success("✅ File uploaded successfully!")
 
+        # -------------------------------------------------
         # File Information
+        # -------------------------------------------------
         st.subheader("📄 File Information")
 
         file_size = uploaded_file.size / 1024
@@ -92,18 +94,14 @@ elif menu == "Upload Document":
 
         st.divider()
 
-        st.info("The document has been saved successfully and is ready for processing.")
-
-        # -----------------------------
+        # -------------------------------------------------
         # PDF Processing
-        # -----------------------------
+        # -------------------------------------------------
         if uploaded_file.name.lower().endswith(".pdf"):
 
-            st.divider()
+            extracted_text = extract_pdf_text(file_path)
 
             st.subheader("📖 Extracted Text")
-
-            extracted_text = extract_pdf_text(file_path)
 
             st.text_area(
                 "PDF Content",
@@ -111,41 +109,83 @@ elif menu == "Upload Document":
                 height=350
             )
 
+            # ---------------------------------------------
+            # Document Statistics
+            # ---------------------------------------------
+            word_count = len(extracted_text.split())
+            char_count = len(extracted_text)
+
+            st.subheader("📊 Document Statistics")
+
+            col1, col2 = st.columns(2)
+
+            with col1:
+                st.metric("📝 Words", word_count)
+
+            with col2:
+                st.metric("🔤 Characters", char_count)
+
             st.divider()
 
+            # ---------------------------------------------
+            # AI Summary
+            # ---------------------------------------------
             st.subheader("🤖 AI Summary")
 
-            if st.button("📝 Generate AI Summary"):
+            if st.button(
+                "📝 Generate AI Summary",
+                use_container_width=True
+            ):
 
-                with st.spinner("Generating summary..."):
+                with st.spinner("🤖 Gemini is analyzing your document..."):
 
                     try:
+
                         summary = summarize_text(extracted_text)
 
-                        st.success("Summary Generated Successfully!")
+                        st.success("✅ Summary Generated Successfully!")
 
-                        st.write(summary)
+                        st.markdown(summary)
+
+                        st.download_button(
+                            label="📥 Download Summary",
+                            data=summary,
+                            file_name="summary.txt",
+                            mime="text/plain",
+                            use_container_width=True
+                        )
 
                     except Exception as e:
-                        st.error(f"Error: {e}")
 
-# -----------------------------
+                        st.error(f"❌ {e}")
+
+        else:
+            st.info("🚀 DOCX and Image processing will be added in the next milestones.")
+
+# =====================================================
 # About Page
-# -----------------------------
+# =====================================================
 else:
 
     st.title("ℹ️ About")
 
-    st.info("""
-### AI Document Intelligence
+    st.markdown("""
+## AI Document Intelligence
 
 **Version:** 1.0
 
-Built with:
+### 🛠 Built With
 
 - 🐍 Python
 - 🎈 Streamlit
-- 🤖 Gemini AI
-- 👁 OCR
+- 🤖 Google Gemini AI
+- 📄 PyMuPDF
+- 👁 OCR (Upcoming)
 - 🧠 NLP
+
+### 👨‍💻 Developer
+
+**Riaz Aslam**
+
+Software Engineering Student | AI & Python Developer
 """)
