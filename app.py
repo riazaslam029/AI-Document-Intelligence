@@ -2,6 +2,7 @@ import os
 import streamlit as st
 
 from utils.file_handler import save_uploaded_file
+from utils.pdf_loader import extract_pdf_text
 
 # -----------------------------
 # Page Configuration
@@ -90,6 +91,20 @@ elif menu == "Upload Document":
         st.divider()
 
         st.info("The document has been saved successfully and is ready for processing.")
+        # Extract PDF text
+        if uploaded_file.name.endswith(".pdf"):
+
+            st.divider()
+
+            st.subheader("📖 Extracted Text")
+
+            extracted_text = extract_pdf_text(file_path)
+
+            st.text_area(
+                "PDF Content",
+                extracted_text,
+                height=400
+            )
 
 # -----------------------------
 # About Page
