@@ -9,6 +9,7 @@ from services.flashcards import generate_flashcards
 from services.qa import ask_document
 from services.mcq import generate_mcqs
 from services.keywords import extract_keywords
+from services.translator import translate_document
 
 # =====================================================
 # Page Configuration
@@ -341,7 +342,55 @@ elif menu == "📤 Upload Document":
             # =====================================================
             with translate_tab:
 
-                st.info("🚧 Translation feature will be available soon.")
+                st.write("Translate the uploaded document into another language.")
+
+                language = st.selectbox(
+                    "Choose Language",
+                    [
+                        "English",
+                        "Urdu",
+                        "Arabic",
+                        "French",
+                        "German",
+                        "Spanish",
+                        "Hindi",
+                        "Chinese",
+                        "Japanese"
+                    ],
+                    key="language_select"
+                )
+
+                if st.button(
+                    "🌍 Translate Document",
+                    key="translate_button",
+                    use_container_width=True
+                ):
+
+                    with st.spinner("Translating document..."):
+
+                        try:
+
+                            translated = translate_document(
+                                extracted_text,
+                                language
+                            )
+
+                            st.success("Translation Completed!")
+
+                            st.markdown(translated)
+
+                            st.download_button(
+                                label="📥 Download Translation",
+                                data=translated,
+                                file_name=f"translation_{language}.txt",
+                                mime="text/plain",
+                                key="download_translation",
+                                use_container_width=True
+                            )
+
+                        except Exception as e:
+
+                            st.error(str(e))
 
         else:
 
