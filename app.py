@@ -1,4 +1,7 @@
+import os
 import streamlit as st
+
+from utils.file_handler import save_uploaded_file
 
 # -----------------------------
 # Page Configuration
@@ -36,7 +39,7 @@ Welcome!
 
 This application can analyze documents using AI.
 
-### Features
+### 🚀 Features
 
 - 📄 PDF Reader
 - 📝 DOCX Reader
@@ -56,36 +59,55 @@ elif menu == "Upload Document":
 
     st.title("📤 Upload Document")
 
+    st.write("Upload a PDF, DOCX, or Image file.")
+
     uploaded_file = st.file_uploader(
-        "Choose a document",
+        "Choose a file",
         type=["pdf", "docx", "png", "jpg", "jpeg"]
     )
 
-    if uploaded_file:
+    if uploaded_file is not None:
 
-        st.success(f"Uploaded: {uploaded_file.name}")
+        # Save file
+        file_path = save_uploaded_file(uploaded_file)
 
-        st.write("File Type:", uploaded_file.type)
+        st.success("✅ File uploaded successfully!")
 
-        st.write("Size:", round(uploaded_file.size / 1024, 2), "KB")
+        st.subheader("📄 File Information")
+
+        file_size = uploaded_file.size / 1024
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.write("**File Name:**", uploaded_file.name)
+            st.write("**File Type:**", uploaded_file.type)
+
+        with col2:
+            st.write(f"**File Size:** {file_size:.2f} KB")
+            st.write("**Saved Location:**", os.path.abspath(file_path))
+
+        st.divider()
+
+        st.info("The document has been saved successfully and is ready for processing.")
 
 # -----------------------------
-# About
+# About Page
 # -----------------------------
 else:
 
-    st.title("About")
+    st.title("ℹ️ About")
 
     st.info("""
-AI Document Intelligence
+### AI Document Intelligence
 
-Version 1.0
+**Version:** 1.0
 
-Developed using:
+Built with:
 
-- Python
-- Streamlit
-- Gemini AI
-- OCR
-- NLP
+- 🐍 Python
+- 🎈 Streamlit
+- 🤖 Gemini AI
+- 👁 OCR
+- 🧠 NLP
 """)
