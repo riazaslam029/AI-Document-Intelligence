@@ -4,6 +4,8 @@ import time
 from dotenv import load_dotenv
 from google import genai
 
+from services.ai_utils import generate_with_retry
+
 # Load environment variables
 load_dotenv()
 
@@ -38,38 +40,9 @@ Document:
 {text}
 """
 
-    max_retries = 3
+    return generate_with_retry(
+        client,
+        "gemini-2.5-flash",
+        prompt
+)
 
-    for attempt in range(max_retries):
-
-        try:
-
-            response = client.models.generate_content(
-                model="gemini-2.5-flash",
-                contents=prompt
-            )
-
-            if hasattr(response, "text") and response.text:
-                return response.text
-
-            return "⚠️ No summary was generated."
-
-        except Exception as e:
-
-            error_message = str(e)
-
-            # Retry only if Gemini is temporarily unavailable
-            if "503" in error_message:
-
-                if attempt < max_retries - 1:
-                    wait_time = (attempt + 1) * 5
-                    time.sleep(wait_time)
-                    continue
-
-                return (
-                    "⚠️ Google Gemini is currently experiencing high demand.\n\n"
-                    "Please wait a minute and try again."
-                )
-
-            # Return any other unexpected error
-            return f"❌ Error: {error_message}"

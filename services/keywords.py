@@ -3,6 +3,8 @@ import os
 from dotenv import load_dotenv
 from google import genai
 
+from services.ai_utils import generate_with_retry
+
 load_dotenv()
 
 client = genai.Client(
@@ -30,9 +32,8 @@ Document:
 {text}
 """
 
-    response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=prompt
+    return generate_with_retry(
+    client,
+        "gemini-2.5-flash",
+        prompt
     )
-
-    return response.text
