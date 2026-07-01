@@ -41,17 +41,23 @@ Welcome to **AI Document Intelligence Suite**.
 
 Analyze documents using the power of **Google Gemini AI**.
 
-### 🚀 Features
+### 🚀 Current Features
 
-- 📄 PDF Reader
-- 📝 DOCX Reader *(Coming Soon)*
-- 🖼 Image OCR *(Coming Soon)*
+- 📄 PDF Upload
+- 📖 PDF Text Extraction
 - 🤖 AI Summarization
-- 💬 Ask Questions *(Coming Soon)*
-- 🧠 Flashcards *(Coming Soon)*
-- ✅ MCQ Generator *(Coming Soon)*
-- 🌍 Translation *(Coming Soon)*
-- 🔑 Keyword Extraction *(Coming Soon)*
+- 📊 Document Statistics
+- 📥 Download AI Summary
+
+### 🔜 Upcoming Features
+
+- 💬 Ask Questions
+- 🧠 Flashcards
+- ✅ MCQ Generator
+- 🔑 Keyword Extraction
+- 🌍 Translation
+- 📝 DOCX Reader
+- 🖼 Image OCR
 """)
 
 # =====================================================
@@ -70,7 +76,9 @@ elif menu == "📤 Upload Document":
 
     if uploaded_file is not None:
 
-        # Save uploaded file
+        # -------------------------------------------------
+        # Save Uploaded File
+        # -------------------------------------------------
         file_path = save_uploaded_file(uploaded_file)
 
         st.success("✅ File uploaded successfully!")
@@ -101,6 +109,9 @@ elif menu == "📤 Upload Document":
 
             extracted_text = extract_pdf_text(file_path)
 
+            # ---------------------------------------------
+            # Extracted Text
+            # ---------------------------------------------
             st.subheader("📖 Extracted Text")
 
             st.text_area(
@@ -112,10 +123,10 @@ elif menu == "📤 Upload Document":
             # ---------------------------------------------
             # Document Statistics
             # ---------------------------------------------
+            st.subheader("📊 Document Statistics")
+
             word_count = len(extracted_text.split())
             char_count = len(extracted_text)
-
-            st.subheader("📊 Document Statistics")
 
             col1, col2 = st.columns(2)
 
@@ -127,40 +138,92 @@ elif menu == "📤 Upload Document":
 
             st.divider()
 
-            # ---------------------------------------------
-            # AI Summary
-            # ---------------------------------------------
-            st.subheader("🤖 AI Summary")
+            # =============================================
+            # AI Workspace
+            # =============================================
+            st.subheader("🤖 AI Workspace")
 
-            if st.button(
-                "📝 Generate AI Summary",
-                use_container_width=True
-            ):
+            summary_tab, ask_tab, flashcards_tab, mcq_tab, keywords_tab, translate_tab = st.tabs([
+                "📑 Summary",
+                "❓ Ask AI",
+                "🧠 Flashcards",
+                "✅ MCQs",
+                "🔑 Keywords",
+                "🌍 Translate"
+            ])
 
-                with st.spinner("🤖 Gemini is analyzing your document..."):
+            # =============================================
+            # Summary Tab
+            # =============================================
+            with summary_tab:
 
-                    try:
+                st.write("Generate an AI summary of your document.")
 
-                        summary = summarize_text(extracted_text)
+                if st.button(
+                    "📝 Generate AI Summary",
+                    use_container_width=True
+                ):
 
-                        st.success("✅ Summary Generated Successfully!")
+                    with st.spinner("🤖 Gemini is analyzing your document..."):
 
-                        st.markdown(summary)
+                        try:
 
-                        st.download_button(
-                            label="📥 Download Summary",
-                            data=summary,
-                            file_name="summary.txt",
-                            mime="text/plain",
-                            use_container_width=True
-                        )
+                            summary = summarize_text(extracted_text)
 
-                    except Exception as e:
+                            st.success("✅ Summary Generated Successfully!")
 
-                        st.error(f"❌ {e}")
+                            st.markdown(summary)
+
+                            st.download_button(
+                                label="📥 Download Summary",
+                                data=summary,
+                                file_name="summary.txt",
+                                mime="text/plain",
+                                use_container_width=True
+                            )
+
+                        except Exception as e:
+
+                            st.error(f"❌ {e}")
+
+            # =============================================
+            # Ask AI
+            # =============================================
+            with ask_tab:
+
+                st.info("🚧 Coming Soon")
+
+            # =============================================
+            # Flashcards
+            # =============================================
+            with flashcards_tab:
+
+                st.info("🚧 Coming Soon")
+
+            # =============================================
+            # MCQs
+            # =============================================
+            with mcq_tab:
+
+                st.info("🚧 Coming Soon")
+
+            # =============================================
+            # Keywords
+            # =============================================
+            with keywords_tab:
+
+                st.info("🚧 Coming Soon")
+
+            # =============================================
+            # Translation
+            # =============================================
+            with translate_tab:
+
+                st.info("🚧 Coming Soon")
 
         else:
-            st.info("🚀 DOCX and Image processing will be added in the next milestones.")
+
+            st.info("🚀 DOCX and Image processing will be added in upcoming milestones.")
 
 # =====================================================
 # About Page
@@ -170,22 +233,26 @@ else:
     st.title("ℹ️ About")
 
     st.markdown("""
-## AI Document Intelligence
+## 📄 AI Document Intelligence
 
 **Version:** 1.0
 
-### 🛠 Built With
+### 🛠 Technologies Used
 
 - 🐍 Python
 - 🎈 Streamlit
 - 🤖 Google Gemini AI
 - 📄 PyMuPDF
-- 👁 OCR (Upcoming)
-- 🧠 NLP
+- 👁 OCR *(Upcoming)*
+- 🧠 Natural Language Processing
 
 ### 👨‍💻 Developer
 
 **Riaz Aslam**
 
-Software Engineering Student | AI & Python Developer
+Software Engineering Student | Python Developer | AI Enthusiast
+
+---
+
+This project is being developed step by step with a focus on clean architecture, modular code, and modern AI capabilities.
 """)
