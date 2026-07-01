@@ -3,6 +3,7 @@ import streamlit as st
 
 from utils.file_handler import save_uploaded_file
 from utils.pdf_loader import extract_pdf_text
+from services.summarizer import summarize_text
 
 # -----------------------------
 # Page Configuration
@@ -69,11 +70,12 @@ elif menu == "Upload Document":
 
     if uploaded_file is not None:
 
-        # Save file
+        # Save the uploaded file
         file_path = save_uploaded_file(uploaded_file)
 
         st.success("✅ File uploaded successfully!")
 
+        # File Information
         st.subheader("📄 File Information")
 
         file_size = uploaded_file.size / 1024
@@ -91,8 +93,11 @@ elif menu == "Upload Document":
         st.divider()
 
         st.info("The document has been saved successfully and is ready for processing.")
-        # Extract PDF text
-        if uploaded_file.name.endswith(".pdf"):
+
+        # -----------------------------
+        # PDF Processing
+        # -----------------------------
+        if uploaded_file.name.lower().endswith(".pdf"):
 
             st.divider()
 
@@ -103,8 +108,26 @@ elif menu == "Upload Document":
             st.text_area(
                 "PDF Content",
                 extracted_text,
-                height=400
+                height=350
             )
+
+            st.divider()
+
+            st.subheader("🤖 AI Summary")
+
+            if st.button("📝 Generate AI Summary"):
+
+                with st.spinner("Generating summary..."):
+
+                    try:
+                        summary = summarize_text(extracted_text)
+
+                        st.success("Summary Generated Successfully!")
+
+                        st.write(summary)
+
+                    except Exception as e:
+                        st.error(f"Error: {e}")
 
 # -----------------------------
 # About Page
