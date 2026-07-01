@@ -3,7 +3,9 @@ import streamlit as st
 
 from utils.file_handler import save_uploaded_file
 from utils.pdf_loader import extract_pdf_text
+
 from services.summarizer import summarize_text
+from services.flashcards import generate_flashcards
 
 # =====================================================
 # Page Configuration
@@ -46,13 +48,13 @@ Analyze documents using the power of **Google Gemini AI**.
 - 📄 PDF Upload
 - 📖 PDF Text Extraction
 - 🤖 AI Summarization
+- 🧠 Flashcard Generation
 - 📊 Document Statistics
-- 📥 Download AI Summary
+- 📥 Download Results
 
 ### 🔜 Upcoming Features
 
 - 💬 Ask Questions
-- 🧠 Flashcards
 - ✅ MCQ Generator
 - 🔑 Keyword Extraction
 - 🌍 Translation
@@ -67,7 +69,7 @@ elif menu == "📤 Upload Document":
 
     st.title("📤 Upload Document")
 
-    st.write("Upload a PDF, DOCX, or Image file.")
+    st.write("Upload a PDF document to begin analysis.")
 
     uploaded_file = st.file_uploader(
         "Choose a document",
@@ -76,16 +78,14 @@ elif menu == "📤 Upload Document":
 
     if uploaded_file is not None:
 
-        # -------------------------------------------------
-        # Save Uploaded File
-        # -------------------------------------------------
+        # Save uploaded file
         file_path = save_uploaded_file(uploaded_file)
 
         st.success("✅ File uploaded successfully!")
 
-        # -------------------------------------------------
+        # =====================================================
         # File Information
-        # -------------------------------------------------
+        # =====================================================
         st.subheader("📄 File Information")
 
         file_size = uploaded_file.size / 1024
@@ -102,16 +102,13 @@ elif menu == "📤 Upload Document":
 
         st.divider()
 
-        # -------------------------------------------------
+        # =====================================================
         # PDF Processing
-        # -------------------------------------------------
+        # =====================================================
         if uploaded_file.name.lower().endswith(".pdf"):
 
             extracted_text = extract_pdf_text(file_path)
 
-            # ---------------------------------------------
-            # Extracted Text
-            # ---------------------------------------------
             st.subheader("📖 Extracted Text")
 
             st.text_area(
@@ -120,9 +117,9 @@ elif menu == "📤 Upload Document":
                 height=350
             )
 
-            # ---------------------------------------------
+            # =====================================================
             # Document Statistics
-            # ---------------------------------------------
+            # =====================================================
             st.subheader("📊 Document Statistics")
 
             word_count = len(extracted_text.split())
@@ -138,9 +135,9 @@ elif menu == "📤 Upload Document":
 
             st.divider()
 
-            # =============================================
+            # =====================================================
             # AI Workspace
-            # =============================================
+            # =====================================================
             st.subheader("🤖 AI Workspace")
 
             summary_tab, ask_tab, flashcards_tab, mcq_tab, keywords_tab, translate_tab = st.tabs([
@@ -152,15 +149,16 @@ elif menu == "📤 Upload Document":
                 "🌍 Translate"
             ])
 
-            # =============================================
-            # Summary Tab
-            # =============================================
+            # =====================================================
+            # Summary
+            # =====================================================
             with summary_tab:
 
-                st.write("Generate an AI summary of your document.")
+                st.write("Generate an AI summary of the uploaded document.")
 
                 if st.button(
                     "📝 Generate AI Summary",
+                    key="summary_button",
                     use_container_width=True
                 ):
 
@@ -179,51 +177,81 @@ elif menu == "📤 Upload Document":
                                 data=summary,
                                 file_name="summary.txt",
                                 mime="text/plain",
+                                key="download_summary",
                                 use_container_width=True
                             )
 
                         except Exception as e:
 
-                            st.error(f"❌ {e}")
+                            st.error(str(e))
 
-            # =============================================
+            # =====================================================
             # Ask AI
-            # =============================================
+            # =====================================================
             with ask_tab:
 
                 st.info("🚧 Coming Soon")
 
-            # =============================================
+            # =====================================================
             # Flashcards
-            # =============================================
+            # =====================================================
             with flashcards_tab:
 
-                st.info("🚧 Coming Soon")
+                st.write("Generate AI-powered flashcards for revision.")
 
-            # =============================================
+                if st.button(
+                    "🧠 Generate Flashcards",
+                    key="flashcards_button",
+                    use_container_width=True
+                ):
+
+                    with st.spinner("🧠 Creating flashcards..."):
+
+                        try:
+
+                            flashcards = generate_flashcards(extracted_text)
+
+                            st.success("✅ Flashcards Generated!")
+
+                            st.markdown(flashcards)
+
+                            st.download_button(
+                                label="📥 Download Flashcards",
+                                data=flashcards,
+                                file_name="flashcards.md",
+                                mime="text/markdown",
+                                key="download_flashcards",
+                                use_container_width=True
+                            )
+
+                        except Exception as e:
+
+                            st.error(str(e))
+
+            # =====================================================
             # MCQs
-            # =============================================
+            # =====================================================
             with mcq_tab:
 
-                st.info("🚧 Coming Soon")
+                st.info("🚧 MCQ Generator will be available soon.")
 
-            # =============================================
+            # =====================================================
             # Keywords
-            # =============================================
+            # =====================================================
             with keywords_tab:
 
-                st.info("🚧 Coming Soon")
+                st.info("🚧 Keyword Extraction will be available soon.")
 
-            # =============================================
+            # =====================================================
             # Translation
-            # =============================================
+            # =====================================================
             with translate_tab:
 
-                st.info("🚧 Coming Soon")
+                st.info("🚧 Translation feature will be available soon.")
 
         else:
 
-            st.info("🚀 DOCX and Image processing will be added in upcoming milestones.")
+            st.info("🚀 DOCX and Image support will be added in future updates.")
 
 # =====================================================
 # About Page
@@ -243,8 +271,8 @@ else:
 - 🎈 Streamlit
 - 🤖 Google Gemini AI
 - 📄 PyMuPDF
-- 👁 OCR *(Upcoming)*
 - 🧠 Natural Language Processing
+- 🔐 Environment Variables (.env)
 
 ### 👨‍💻 Developer
 
@@ -254,5 +282,5 @@ Software Engineering Student | Python Developer | AI Enthusiast
 
 ---
 
-This project is being developed step by step with a focus on clean architecture, modular code, and modern AI capabilities.
+This project demonstrates AI-powered document analysis using modern Python technologies. It is being developed incrementally with an emphasis on clean code, modular design, and practical AI capabilities.
 """)
