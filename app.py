@@ -7,7 +7,7 @@ from utils.pdf_loader import extract_pdf_text
 from services.summarizer import summarize_text
 from services.flashcards import generate_flashcards
 from services.qa import ask_document
-
+from services.mcq import generate_mcqs
 # =====================================================
 # Page Configuration
 # =====================================================
@@ -268,7 +268,36 @@ elif menu == "📤 Upload Document":
             # =====================================================
             with mcq_tab:
 
-                st.info("🚧 MCQ Generator will be available soon.")
+                st.write("Generate AI-powered multiple-choice questions.")
+
+                if st.button(
+                    "✅ Generate MCQs",
+                    key="mcq_button",
+                    use_container_width=True
+                ):
+
+                    with st.spinner("Generating MCQs..."):
+
+                        try:
+
+                            mcqs = generate_mcqs(extracted_text)
+
+                            st.success("MCQs Generated Successfully!")
+
+                            st.markdown(mcqs)
+
+                            st.download_button(
+                                "📥 Download MCQs",
+                                mcqs,
+                                "mcqs.md",
+                                "text/markdown",
+                                key="download_mcqs",
+                                use_container_width=True
+                            )
+
+                        except Exception as e:
+
+                            st.error(str(e))
 
             # =====================================================
             # Keywords
