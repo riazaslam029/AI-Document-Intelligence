@@ -6,6 +6,7 @@ from utils.pdf_loader import extract_pdf_text
 
 from services.summarizer import summarize_text
 from services.flashcards import generate_flashcards
+from services.qa import ask_document
 
 # =====================================================
 # Page Configuration
@@ -190,7 +191,41 @@ elif menu == "📤 Upload Document":
             # =====================================================
             with ask_tab:
 
-                st.info("🚧 Coming Soon")
+                st.subheader("💬 Ask Questions About Your Document")
+
+                question = st.text_input(
+                    "Enter your question",
+                    placeholder="Example: What is the main objective of this document?"
+                )
+
+                if st.button(
+                    "🤖 Ask AI",
+                    key="ask_ai_button",
+                    use_container_width=True
+                ):
+
+                    if question.strip() == "":
+
+                        st.warning("Please enter a question.")
+
+                    else:
+
+                        with st.spinner("🤖 Gemini is analyzing your question..."):
+
+                            try:
+
+                                answer = ask_document(
+                                    extracted_text,
+                                    question
+                                )
+
+                                st.success("Answer")
+
+                                st.markdown(answer)
+
+                            except Exception as e:
+
+                                st.error(str(e))
 
             # =====================================================
             # Flashcards
