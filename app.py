@@ -8,6 +8,8 @@ from services.summarizer import summarize_text
 from services.flashcards import generate_flashcards
 from services.qa import ask_document
 from services.mcq import generate_mcqs
+from services.keywords import extract_keywords
+
 # =====================================================
 # Page Configuration
 # =====================================================
@@ -304,8 +306,36 @@ elif menu == "📤 Upload Document":
             # =====================================================
             with keywords_tab:
 
-                st.info("🚧 Keyword Extraction will be available soon.")
+                st.write("Extract the most important keywords from the document.")
 
+                if st.button(
+                    "🔑 Extract Keywords",
+                    key="keywords_button",
+                    use_container_width=True
+                ):
+
+                    with st.spinner("Extracting keywords..."):
+
+                        try:
+
+                            keywords = extract_keywords(extracted_text)
+
+                            st.success("Keywords Extracted!")
+
+                            st.markdown(keywords)
+
+                            st.download_button(
+                                label="📥 Download Keywords",
+                                data=keywords,
+                                file_name="keywords.txt",
+                                mime="text/plain",
+                                key="download_keywords",
+                                use_container_width=True
+                            )
+
+                        except Exception as e:
+
+                            st.error(str(e))
             # =====================================================
             # Translation
             # =====================================================
