@@ -1,3 +1,25 @@
-.env
+# Virtual Environment
 venv/
+
+# Environment Variables
+.env
+
+# Python
 __pycache__/
+*.pyc
+*.pyo
+
+# VS Code
+.vscode/
+
+# Streamlit
+.streamlit/
+
+# macOS
+.DS_Store
+
+# Uploads (optional)
+uploads/
+
+# Vector Database
+vector_store/
