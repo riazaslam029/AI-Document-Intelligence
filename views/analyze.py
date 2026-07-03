@@ -91,26 +91,6 @@ def show():
                 height=350
             )
 
-            from services.rag import (
-                split_document,
-                build_vector_store,
-                rag_answer,
-            )
-
-            if "vector_index" not in st.session_state:
-
-                chunks = split_document(extracted_text)
-
-                index, chunks = build_vector_store(chunks)
-
-                st.session_state.vector_index = index
-                st.session_state.document_chunks = chunks
-            
-
-            else:
-                index = st.session_state.vector_index
-                chunks = st.session_state.document_chunks
-
             # Document Statistics
             
             word_count = len(extracted_text.split())
@@ -182,13 +162,8 @@ def show():
 
                         with st.spinner("Finding answer..."):
 
-                            from services.rag import rag_answer
-
-                            answer = rag_answer(
-                                question,
-                                index,
-                                chunks
-                            )
+                            from services.qa import ask_document
+                            answer = ask_document(question, extracted_text)
                         st.success("Answer")
 
                         st.markdown(answer)
