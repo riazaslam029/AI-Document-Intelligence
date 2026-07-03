@@ -1,23 +1,23 @@
-streamlit
-google-genai
-python-dotenv
+streamlit==1.58.0
+google-genai==2.10.0
+python-dotenv==1.2.2
 
-PyMuPDF
-python-docx
-Pillow
+PyMuPDF==1.28.0
+python-docx==1.2.0
+Pillow==12.2.0
 
-easyocr
-opencv-python-headless
+easyocr==1.7.2
+opencv-python-headless==4.10.0.84
 
-numpy
-pandas
-scikit-learn
-scikit-image
+numpy==2.5.0
+pandas==3.0.3
+scikit-learn==1.9.0
+scikit-image==0.26.0
 
-sentence-transformers
-torch
-torchvision
-faiss-cpu
+sentence-transformers==5.6.0
+torch==2.8.0
+torchvision==0.23.0
+faiss-cpu==1.12.0
 
-transformers
-huggingface_hub
+transformers==4.56.0
+huggingface_hub==0.35.0
