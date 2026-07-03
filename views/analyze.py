@@ -12,7 +12,6 @@ from services.flashcards import generate_flashcards
 from services.mcq import generate_mcqs
 from services.keywords import extract_keywords
 from services.translator import translate_document
-from services.ocr_service import process_image
 
 
 def show():
@@ -78,7 +77,7 @@ Upload a PDF, Word document, or image to extract text and analyze it using the a
             caption="Uploaded Image",
             use_container_width=True,
         )
-
+        from services.ocr_service import process_image
         with st.spinner("Extracting text from image..."):
 
             extracted_text = process_image(file_path)
@@ -196,8 +195,8 @@ Upload a PDF, Word document, or image to extract text and analyze it using the a
 
                     # Verify the parameter order in services/qa.py
                     answer = ask_document(
-                        extracted_text,
                         question,
+                        extracted_text,
                     )
 
                 st.success("Answer generated successfully.")
