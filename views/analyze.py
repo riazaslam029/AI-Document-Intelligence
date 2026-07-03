@@ -4,6 +4,7 @@ import streamlit as st
 from utils.file_handler import save_uploaded_file
 from utils.pdf_loader import extract_pdf_text
 from utils.docx_loader import extract_docx_text
+from utils.ui_helpers import show_ai_result
 
 from services.summarizer import summarize_text
 from services.qa import ask_document
@@ -16,25 +17,33 @@ from services.ocr_service import process_image
 
 def show():
 
+    st.title("📂 Analyze Document")
 
-    st.title("Analyze Document")
-
-    uploaded_file = st.file_uploader(
-        "Choose a PDF, Word document, or image",
-        type=["pdf", "docx", "png", "jpg", "jpeg"]
+    st.write(
+        """
+Upload a PDF, Word document, or image to extract text and analyze it using the available AI tools.
+"""
     )
 
-    if uploaded_file is not None:
+    st.divider()
 
-        # Save uploaded file
-        file_path = save_uploaded_file(uploaded_file)
+    uploaded_file = st.file_uploader(
+        "Choose a document",
+        type=["pdf", "docx", "png", "jpg", "jpeg"],
+    )
 
-        st.success("Document uploaded successfully.")
+    if uploaded_file is None:
+        return
 
-      
-        # File Information
+    file_path = save_uploaded_file(uploaded_file)
 
-        st.subheader("File Information")
+    st.success("Document uploaded successfully.")
+
+    # File Information
+
+    with st.container():
+
+        st.subheader("📄 File Information")
 
         file_size = uploaded_file.size / 1024
 
@@ -45,210 +54,258 @@ def show():
             st.write("**File Type:**", uploaded_file.type)
 
         with col2:
-            st.write(f"**File Size:** {file_size:.2f} KB")
+            st.write(f"**File Size:** {file_size:.2f} KB ")
             st.write("**Saved Location:**", os.path.abspath(file_path))
 
-        st.divider()
+    st.divider()
 
-        
-        # Extract Text
-        
-        if uploaded_file.name.lower().endswith(".pdf"):
-            extracted_text = extract_pdf_text(file_path)
+    # Extract Text
 
-        elif uploaded_file.name.lower().endswith(".docx"):
-            extracted_text = extract_docx_text(file_path)
+    if uploaded_file.name.lower().endswith(".pdf"):
 
-        elif uploaded_file.name.lower().endswith(
-            (".png", ".jpg", ".jpeg")
+        extracted_text = extract_pdf_text(file_path)
+
+    elif uploaded_file.name.lower().endswith(".docx"):
+
+        extracted_text = extract_docx_text(file_path)
+
+    elif uploaded_file.name.lower().endswith(
+        (".png", ".jpg", ".jpeg")
+    ):
+
+        st.image(
+            uploaded_file,
+            caption="Uploaded Image",
+            use_container_width=True,
+        )
+
+        with st.spinner("Extracting text from image..."):
+
+            extracted_text = process_image(file_path)
+
+    else:
+
+        extracted_text = ""
+
+    if not extracted_text:
+
+        st.error("No readable text could be extracted from this document.")
+
+        return
+
+    # Statistics
+
+    word_count = len(extracted_text.split())
+    char_count = len(extracted_text)
+
+    st.subheader("📊 Document Statistics")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.metric("Words", word_count)
+
+    with col2:
+        st.metric("Characters", char_count)
+
+    st.divider()
+
+    # Extracted Text
+
+    st.subheader("📖 Extracted Text")
+
+    with st.expander(
+        "View Extracted Text",
+        expanded=False,
+    ):
+
+        st.text_area(
+            "Document Content",
+            extracted_text,
+            height=350,
+        )
+
+    st.divider()
+
+    # AI Workspace
+
+    st.header("🤖 AI Workspace")
+
+    st.caption(
+        "Choose one of the tools below to analyze your document."
+    )
+
+    (
+        summary_tab,
+        qa_tab,
+        flashcard_tab,
+        mcq_tab,
+        keyword_tab,
+        translation_tab,
+    ) = st.tabs(
+        [
+            "Summary",
+            "Ask Questions",
+            "Flashcards",
+            "MCQs",
+            "Keywords",
+            "Translation",
+        ]
+    )
+
+    # Summary
+
+    with summary_tab:
+
+        st.write(
+            "Generate a concise summary of the uploaded document."
+        )
+
+        show_ai_result(
+            button_label="Generate Summary",
+            spinner_text="Generating summary...",
+            callback=summarize_text,
+            text=extracted_text,
+            download_name="summary.md",
+            key="summary",
+        )
+
+    # Question Answering
+
+    with qa_tab:
+
+        st.write(
+            "Ask questions about the uploaded document."
+        )
+
+        question = st.text_input(
+            "Enter your question",
+            placeholder="Example: What is the main idea of this document?",
+            key="question_input",
+        )
+
+        if st.button(
+            "Get Answer",
+            key="ask_btn",
+            use_container_width=True,
         ):
 
-            with st.spinner("Extracting text from image..."):
+            if question.strip():
 
-                extracted_text = process_image(file_path)
+                with st.spinner("Searching for the answer..."):
 
-        else:
-            extracted_text = ""
-
-        if uploaded_file.name.lower().endswith((".png", ".jpg", ".jpeg")):
-
-            st.image(
-                uploaded_file,
-                caption="Uploaded Image",
-                use_container_width=True
-            )
-
-            
-
-        # Continue only if text was extracted
-        if extracted_text:
-
-            st.subheader("Extracted Text")
-
-            st.text_area(
-                "Document Content",
-                extracted_text,
-                height=350
-            )
-
-            # Document Statistics
-            
-            word_count = len(extracted_text.split())
-            char_count = len(extracted_text)
-
-            st.subheader("Document Statistics")
-
-            col1, col2 = st.columns(2)
-
-            with col1:
-                st.metric("Words", word_count)
-
-            with col2:
-                st.metric("Characters", char_count)
-
-            st.divider()
-                        
-            # AI Workspace
-            
-
-            st.header("Workspace")
-
-            (
-                summary_tab,
-                qa_tab,
-                flashcard_tab,
-                mcq_tab,
-                keyword_tab,
-                translation_tab
-            ) = st.tabs([
-                "Summary",
-                "Ask Questions",
-                "Flashcards",
-                "MCQs",
-                "Keywords",
-                "Translation"
-            ])
-
-            # SUMMARY
-
-            from utils.ui_helpers import show_ai_result
-
-            show_ai_result(
-                button_label="Generate Summary",
-                spinner_text="Generating summary...",
-                callback=summarize_text,
-                text=extracted_text,
-                download_name="summary.md",
-                key="summary",
-            )
-
-            
-            # ASK QUESTIONS
-
-            with qa_tab:
-
-                question = st.text_input(
-                    "Ask a question about the document",
-                    key="question_input"
-                )
-
-                if st.button(
-                    "Ask",
-                    key="ask_btn",
-                    use_container_width=True
-                ):
-
-                    if question.strip():
-
-                        with st.spinner("Finding answer..."):
-
-                            from services.qa import ask_document
-                            answer = ask_document(question, extracted_text)
-                        st.success("Answer")
-
-                        st.markdown(answer)
-
-                    else:
-
-                        st.warning("Please enter a question.")
-
-            # FLASHCARDS
-
-            show_ai_result(
-                button_label="Generate Flashcards",
-                spinner_text="Generating flashcards...",
-                callback=generate_flashcards,
-                text=extracted_text,
-                download_name="flashcards.md",
-                key="flashcards",
-            )
-
-            # MCQs
-
-            show_ai_result(
-                button_label="Generate MCQs",
-                spinner_text="Generating MCQs...",
-                callback=generate_mcqs,
-                text=extracted_text,
-                download_name="mcqs.md",
-                key="mcqs",
-            )
-
-            # KEYWORDS
-
-            show_ai_result(
-                button_label="Extract Keywords",
-                spinner_text="Extracting keywords...",
-                callback=extract_keywords,
-                text=extracted_text,
-                download_name="keywords.md",
-                key="keywords",
-            )
-
-            # TRANSLATION
-
-            with translation_tab:
-
-                language = st.selectbox(
-                    "Translate to",
-                    [
-                        "Urdu",
-                        "English",
-                        "Arabic",
-                        "French",
-                        "German",
-                        "Spanish"
-                    ]
-                )
-
-                if st.button(
-                    "Translate",
-                    key="translate_btn",
-                    use_container_width=True
-                ):
-
-                    with st.spinner("Translating..."):
-
-                        translated_text = translate_document(
-                            extracted_text,
-                            language
-                        )
-
-                    st.success("Translation completed.")
-
-                    st.markdown(translated_text)
-
-                    st.download_button(
-                        "Download Translation",
-                        translated_text,
-                        file_name="translation.md",
-                        mime="text/markdown",
-                        key="download_translation",
-                        use_container_width=True
+                    # Verify the parameter order in services/qa.py
+                    answer = ask_document(
+                        extracted_text,
+                        question,
                     )
 
-                else:
+                st.success("Answer generated successfully.")
 
-                    st.error(
-                        "No readable text could be extracted from this document."
-                    )
+                st.markdown(answer)
+
+            else:
+
+                st.warning("Please enter a question.")
+
+    # Flashcards
+
+    with flashcard_tab:
+
+        st.write(
+            "Generate study flashcards from the document."
+        )
+
+        show_ai_result(
+            button_label="Generate Flashcards",
+            spinner_text="Generating flashcards...",
+            callback=generate_flashcards,
+            text=extracted_text,
+            download_name="flashcards.md",
+            key="flashcards",
+        )
+
+    # MCQs
+
+    with mcq_tab:
+
+        st.write(
+            "Generate multiple-choice questions from the document."
+        )
+
+        show_ai_result(
+            button_label="Generate MCQs",
+            spinner_text="Generating MCQs...",
+            callback=generate_mcqs,
+            text=extracted_text,
+            download_name="mcqs.md",
+            key="mcqs",
+        )
+
+    # Keywords
+
+    with keyword_tab:
+
+        st.write(
+            "Extract the most important keywords from the document."
+        )
+
+        show_ai_result(
+            button_label="Extract Keywords",
+            spinner_text="Extracting keywords...",
+            callback=extract_keywords,
+            text=extracted_text,
+            download_name="keywords.md",
+            key="keywords",
+        )
+
+    # Translation
+
+    with translation_tab:
+
+        st.write(
+            "Translate the extracted text into another language."
+        )
+
+        language = st.selectbox(
+            "Translate to",
+            [
+                "Urdu",
+                "English",
+                "Arabic",
+                "French",
+                "German",
+                "Spanish",
+            ],
+        )
+
+        if st.button(
+            "Translate Document",
+            key="translate_btn",
+            use_container_width=True,
+        ):
+
+            with st.spinner("Translating document..."):
+
+                translated_text = translate_document(
+                    extracted_text,
+                    language,
+                )
+
+            st.success("Translation completed successfully.")
+
+            st.markdown(translated_text)
+
+            st.download_button(
+                "Download Translation",
+                translated_text,
+                file_name="translation.md",
+                mime="text/markdown",
+                use_container_width=True,
+            )
+
+    st.divider()
+
+    st.caption(
+        "Document Intelligence Suite • Version 1.0"
+    )
