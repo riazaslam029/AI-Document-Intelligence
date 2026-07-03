@@ -91,7 +91,26 @@ def show():
                 height=350
             )
 
+            from services.rag import (
+                split_document,
+                build_vector_store,
+                rag_answer,
+            )
+
+            if "vector_index" not in st.session_state:
+
+                chunks = split_document(extracted_text)
+
+                index, chunks = build_vector_store(chunks)
+
+                st.session_state.vector_index = index
+                st.session_state.document_chunks = chunks
             
+
+            else:
+                index = st.session_state.vector_index
+                chunks = st.session_state.document_chunks
+
             # Document Statistics
             
             word_count = len(extracted_text.split())
@@ -132,32 +151,16 @@ def show():
 
             # SUMMARY
 
-            with summary_tab:
+            from utils.ui_helpers import show_ai_result
 
-                st.write("Generate a concise summary of the document.")
-
-                if st.button(
-                    "Generate Summary",
-                    key="summary_btn",
-                    use_container_width=True
-                ):
-
-                    with st.spinner("Generating summary..."):
-
-                        summary = summarize_text(extracted_text)
-
-                    st.success("Summary generated successfully.")
-
-                    st.markdown(summary)
-
-                    st.download_button(
-                        "Download Summary",
-                        summary,
-                        file_name="summary.md",
-                        mime="text/markdown",
-                        key="download_summary",
-                        use_container_width=True
-                    )
+            show_ai_result(
+                button_label="Generate Summary",
+                spinner_text="Generating summary...",
+                callback=summarize_text,
+                text=extracted_text,
+                download_name="summary.md",
+                key="summary",
+            )
 
             
             # ASK QUESTIONS
@@ -179,11 +182,13 @@ def show():
 
                         with st.spinner("Finding answer..."):
 
-                            answer = ask_document(
-                                extracted_text,
-                                question
-                            )
+                            from services.rag import rag_answer
 
+                            answer = rag_answer(
+                                question,
+                                index,
+                                chunks
+                            )
                         st.success("Answer")
 
                         st.markdown(answer)
@@ -194,102 +199,36 @@ def show():
 
             # FLASHCARDS
 
-            with flashcard_tab:
-
-                st.write(
-                    "Generate study flashcards from the document."
-                )
-
-                if st.button(
-                    "Generate Flashcards",
-                    key="flashcard_btn",
-                    use_container_width=True
-                ):
-
-                    with st.spinner("Generating flashcards..."):
-
-                        flashcards = generate_flashcards(
-                            extracted_text
-                        )
-
-                    st.success("Flashcards generated.")
-
-                    st.markdown(flashcards)
-
-                    st.download_button(
-                        "Download Flashcards",
-                        flashcards,
-                        file_name="flashcards.md",
-                        mime="text/markdown",
-                        key="download_flashcards",
-                        use_container_width=True
-                    )
+            show_ai_result(
+                button_label="Generate Flashcards",
+                spinner_text="Generating flashcards...",
+                callback=generate_flashcards,
+                text=extracted_text,
+                download_name="flashcards.md",
+                key="flashcards",
+            )
 
             # MCQs
 
-            with mcq_tab:
-
-                st.write(
-                    "Generate multiple-choice questions."
-                )
-
-                if st.button(
-                    "Generate MCQs",
-                    key="mcq_btn",
-                    use_container_width=True
-                ):
-
-                    with st.spinner("Generating MCQs..."):
-
-                        mcqs = generate_mcqs(
-                            extracted_text
-                        )
-
-                    st.success("MCQs generated.")
-
-                    st.markdown(mcqs)
-
-                    st.download_button(
-                        "Download MCQs",
-                        mcqs,
-                        file_name="mcqs.md",
-                        mime="text/markdown",
-                        key="download_mcqs",
-                        use_container_width=True
-                    )
+            show_ai_result(
+                button_label="Generate MCQs",
+                spinner_text="Generating MCQs...",
+                callback=generate_mcqs,
+                text=extracted_text,
+                download_name="mcqs.md",
+                key="mcqs",
+            )
 
             # KEYWORDS
 
-            with keyword_tab:
-
-                st.write(
-                    "Extract important keywords from the document."
-                )
-
-                if st.button(
-                    "Extract Keywords",
-                    key="keyword_btn",
-                    use_container_width=True
-                ):
-
-                    with st.spinner("Extracting keywords..."):
-
-                        keywords = extract_keywords(
-                            extracted_text
-                        )
-
-                    st.success("Keywords extracted.")
-
-                    st.markdown(keywords)
-
-                    st.download_button(
-                        "Download Keywords",
-                        keywords,
-                        file_name="keywords.md",
-                        mime="text/markdown",
-                        key="download_keywords",
-                        use_container_width=True
-                    )
+            show_ai_result(
+                button_label="Extract Keywords",
+                spinner_text="Extracting keywords...",
+                callback=extract_keywords,
+                text=extracted_text,
+                download_name="keywords.md",
+                key="keywords",
+            )
 
             # TRANSLATION
 
