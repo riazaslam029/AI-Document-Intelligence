@@ -1,8 +1,8 @@
 import streamlit as st
 
-from pages import home
-from pages import analyze
-from pages import about
+from views import home
+from views import analyze
+from views import about
 
 
 st.set_page_config(

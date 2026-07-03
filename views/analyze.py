@@ -11,6 +11,7 @@ from services.flashcards import generate_flashcards
 from services.mcq import generate_mcqs
 from services.keywords import extract_keywords
 from services.translator import translate_document
+from services.ocr_service import process_image
 
 
 def show():
@@ -19,8 +20,8 @@ def show():
     st.title("Analyze Document")
 
     uploaded_file = st.file_uploader(
-        "Choose a PDF or DOCX document",
-        type=["pdf", "docx"]
+        "Choose a PDF, Word document, or image",
+        type=["pdf", "docx", "png", "jpg", "jpeg"]
     )
 
     if uploaded_file is not None:
@@ -52,15 +53,32 @@ def show():
         
         # Extract Text
         
-        extracted_text = ""
-
         if uploaded_file.name.lower().endswith(".pdf"):
-
             extracted_text = extract_pdf_text(file_path)
 
         elif uploaded_file.name.lower().endswith(".docx"):
-
             extracted_text = extract_docx_text(file_path)
+
+        elif uploaded_file.name.lower().endswith(
+            (".png", ".jpg", ".jpeg")
+        ):
+
+            with st.spinner("Extracting text from image..."):
+
+                extracted_text = process_image(file_path)
+
+        else:
+            extracted_text = ""
+
+        if uploaded_file.name.lower().endswith((".png", ".jpg", ".jpeg")):
+
+            st.image(
+                uploaded_file,
+                caption="Uploaded Image",
+                use_container_width=True
+            )
+
+            
 
         # Continue only if text was extracted
         if extracted_text:
