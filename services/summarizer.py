@@ -6,20 +6,16 @@ from google import genai
 
 from services.ai_utils import generate_with_retry
 
-# Load environment variables
-load_dotenv()
+import streamlit as st
 
-# Create Gemini client
-client = genai.Client(
-    api_key=os.getenv("GEMINI_API_KEY")
-)
+from services.gemini_client import get_client
 
 
 def summarize_text(text):
     """
     Generate an AI summary of the uploaded document.
     """
-
+    client = get_client()
     # Limit very large documents to reduce API load
     text = text[:12000]
 

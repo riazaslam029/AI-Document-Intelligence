@@ -1,47 +1,36 @@
-import os
-import time
-
-from dotenv import load_dotenv
-from google import genai
-
-load_dotenv()
-
-client = genai.Client(
-    api_key=os.getenv("GEMINI_API_KEY")
-)
+from services.gemini_client import get_client
+from services.ai_utils import generate_with_retry
 
 
 def ask_document(document_text, question):
+    """
+    Answer questions using only the uploaded document.
+    """
+
+    client = get_client()
 
     prompt = f"""
+You are an intelligent document assistant.
+
 Answer ONLY using the uploaded document.
 
+Rules:
+- Do not make up information.
+- If the answer is not present in the document, reply:
+  "I couldn't find this information in the document."
+- Keep the answer clear and concise.
+
 Document:
+
 {document_text}
 
 Question:
+
 {question}
 """
 
-    for attempt in range(3):
-
-        try:
-
-            response = client.models.generate_content(
-                model="gemini-2.5-flash",
-                contents=prompt
-            )
-
-            return response.text
-
-        except Exception as e:
-
-            if "503" in str(e):
-
-                time.sleep(5)
-
-            else:
-
-                raise
-
-    return "⚠️ Gemini is currently busy. Please try again in a few moments."
+    return generate_with_retry(
+        client,
+        "gemini-2.5-flash",
+        prompt
+    )

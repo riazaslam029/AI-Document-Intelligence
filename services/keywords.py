@@ -1,18 +1,13 @@
-import os
-
-from dotenv import load_dotenv
-from google import genai
-
+from services.gemini_client import get_client
 from services.ai_utils import generate_with_retry
-
-load_dotenv()
-
-client = genai.Client(
-    api_key=os.getenv("GEMINI_API_KEY")
-)
 
 
 def extract_keywords(text):
+    """
+    Extract the most important keywords from the uploaded document.
+    """
+
+    client = get_client()
 
     prompt = f"""
 You are an NLP expert.
@@ -33,7 +28,7 @@ Document:
 """
 
     return generate_with_retry(
-    client,
+        client,
         "gemini-2.5-flash",
         prompt
     )

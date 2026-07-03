@@ -1,12 +1,12 @@
 import time
 
 
-def generate_with_retry(client, model, prompt, max_retries=3):
+def generate_with_retry(client, model, prompt, retries=3):
     """
-    Generate AI content with retry logic and user-friendly error messages.
+    Retry Gemini requests automatically if the service is temporarily unavailable.
     """
 
-    for attempt in range(max_retries):
+    for attempt in range(retries):
 
         try:
 
@@ -15,46 +15,16 @@ def generate_with_retry(client, model, prompt, max_retries=3):
                 contents=prompt
             )
 
-            if hasattr(response, "text") and response.text:
-                return response.text
-
-            return "⚠️ No response was generated."
+            return response.text
 
         except Exception as e:
 
-            error = str(e)
+            if "503" in str(e) and attempt < retries - 1:
 
-            # Daily quota exceeded
-            if "429" in error or "RESOURCE_EXHAUSTED" in error:
-                return (
-                    "⚠️ Gemini API daily quota has been reached.\n\n"
-                    "Please try again later or use another API key."
-                )
+                time.sleep(5)
 
-            # Gemini temporarily busy
-            if "503" in error or "UNAVAILABLE" in error:
+            else:
 
-                if attempt < max_retries - 1:
-                    time.sleep((attempt + 1) * 5)
-                    continue
+                raise
 
-                return (
-                    "⚠️ Gemini servers are currently busy.\n\n"
-                    "Please try again in a few moments."
-                )
-
-            # Timeout
-            if "timeout" in error.lower():
-                return (
-                    "⚠️ Request timed out.\n"
-                    "Please try again."
-                )
-
-            # Internet issues
-            if "connection" in error.lower():
-                return (
-                    "⚠️ Internet connection problem."
-                )
-
-            # Any other error
-            return f"❌ {error}"
+    return "⚠️ Gemini is currently busy. Please try again in a few moments."

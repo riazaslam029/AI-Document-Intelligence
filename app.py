@@ -11,6 +11,24 @@ st.set_page_config(
     layout="wide"
 )
 
+st.sidebar.title("📄 Document Intelligence Suite")
+st.sidebar.markdown("---")
+
+st.sidebar.subheader("Gemini API")
+
+api_key = st.sidebar.text_input(
+    "Enter your Gemini API Key",
+    type="password",
+    help="Your key is used only during this session."
+)
+
+st.session_state["api_key"] = api_key
+
+st.sidebar.markdown(
+    "[Get a free Gemini API Key](https://aistudio.google.com/apikey)"
+)
+
+st.sidebar.markdown("---")
 
 st.sidebar.title("📄 Document Intelligence Suite")
 st.sidebar.markdown("---")
