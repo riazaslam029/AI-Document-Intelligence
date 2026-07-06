@@ -1,41 +1,63 @@
-# 📄 Document Intelligence Suite
+# 📄 AI Document Intelligence Suite
 
-Document Intelligence Suite is a Python-based web application that helps users analyze PDF, Word, and image documents using Google Gemini AI. The application extracts text from uploaded documents and provides multiple AI-powered tools to summarize, understand, and study the content.
-
----
-
-## Features
-
-- 📄 PDF document support
-- 📝 Microsoft Word (.docx) support
-- 🖼 Image OCR (PNG, JPG, JPEG)
-- 📑 AI-powered document summarization
-- ❓ Question answering based on document content
-- 🧠 Flashcard generation
-- ✅ Multiple Choice Question (MCQ) generation
-- 🔑 Keyword extraction
-- 🌐 Document translation
-- 📥 Download generated results
+> An AI-powered document analysis platform built with **Python**, **Streamlit**, and **Google Gemini AI** that enables users to analyze PDFs, Word documents, and images through intelligent summarization, question answering, OCR, translation, flashcards, and more.
 
 ---
 
-## Technologies Used
+## 🌐 Live Demo
 
-- Python
-- Streamlit
-- Google Gemini API
-- PyMuPDF
-- python-docx
-- EasyOCR
-- Pillow
-- python-dotenv
+🔗 **Streamlit App:**  
+https://ai-document-intelligence-fsomujrral6fehfzc7uehp.streamlit.app/
 
 ---
 
-## Project Structure
+## ✨ Features
 
-```
+### 📂 Document Support
+- 📄 PDF Documents (.pdf)
+- 📝 Microsoft Word (.docx)
+- 🖼 Images (.png, .jpg, .jpeg)
+
+### 🤖 AI-Powered Analysis
+- 📑 Intelligent Document Summarization
+- ❓ Ask Questions About the Document
+- 🧠 Generate Study Flashcards
+- ✅ Generate Multiple Choice Questions (MCQs)
+- 🔑 Extract Important Keywords
+- 🌍 Translate Documents into Multiple Languages
+
+### 📊 Additional Features
+- 📋 Automatic Text Extraction
+- 📈 Document Statistics
+- 💾 Download AI-generated Results
+- 🔐 Secure User-Provided Gemini API Key
+- 🎨 Clean & Responsive Streamlit Interface
+
+---
+
+# 🚀 Technologies Used
+
+| Category | Technologies |
+|----------|--------------|
+| Programming Language | Python |
+| Frontend | Streamlit |
+| AI Model | Google Gemini 2.5 Flash |
+| OCR | EasyOCR |
+| PDF Processing | PyMuPDF |
+| Word Processing | python-docx |
+| Image Processing | Pillow |
+| Environment Variables | python-dotenv |
+
+---
+
+# 📁 Project Structure
+
+```text
 AI-Document-Intelligence/
+│
+├── app.py
+├── requirements.txt
+├── README.md
 │
 ├── services/
 │   ├── summarizer.py
@@ -44,12 +66,14 @@ AI-Document-Intelligence/
 │   ├── mcq.py
 │   ├── keywords.py
 │   ├── translator.py
+│   ├── gemini_client.py
 │   └── ocr_service.py
 │
 ├── utils/
 │   ├── file_handler.py
 │   ├── pdf_loader.py
 │   ├── docx_loader.py
+│   ├── ocr.py
 │   └── ui_helpers.py
 │
 ├── views/
@@ -57,128 +81,187 @@ AI-Document-Intelligence/
 │   ├── analyze.py
 │   └── about.py
 │
-├── uploads/
-├── app.py
-├── requirements.txt
-├── .env.example
-└── README.md
+└── uploads/
 ```
 
 ---
 
-## Installation
+# ⚙️ Installation
 
-Clone the repository
+## 1️⃣ Clone the Repository
 
 ```bash
 git clone https://github.com/riazaslam029/AI-Document-Intelligence.git
 ```
 
-Move into the project directory
+---
+
+## 2️⃣ Navigate to the Project
 
 ```bash
 cd AI-Document-Intelligence
 ```
 
-Create a virtual environment
+---
+
+## 3️⃣ Create a Virtual Environment
 
 ```bash
 python -m venv venv
 ```
 
-Activate the virtual environment
+### Activate Environment
 
-### Linux / macOS
-
-```bash
-source venv/bin/activate
-```
-
-### Windows
+**Windows**
 
 ```bash
 venv\Scripts\activate
 ```
 
-Install dependencies
+**Linux / macOS**
+
+```bash
+source venv/bin/activate
+```
+
+---
+
+## 4️⃣ Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Create a `.env` file
+---
 
-```
-GEMINI_API_KEY=YOUR_API_KEY
-```
-
-Run the application
+## 5️⃣ Run the Application
 
 ```bash
 streamlit run app.py
 ```
 
----
-
-## Usage
-
-1. Open the application.
-2. Navigate to **Analyze Document**.
-3. Upload a PDF, DOCX, or image.
-4. Review the extracted text.
-5. Use any AI tool to analyze the document.
-6. Download the generated results if needed.
+The application will open in your default browser.
 
 ---
 
-## Screenshots
+# 🔑 Gemini API Key
 
-> Add screenshots after deployment.
+This project **does not store or expose any API keys**.
 
-Example:
+Simply obtain your free Gemini API key from:
 
-```
-assets/
-└── screenshots/
-    ├── home.png
-    ├── analyze.png
-    ├── summary.png
-    └── translation.png
-```
+https://aistudio.google.com/app/apikey
+
+Then paste your key into the application's sidebar when prompted.
 
 ---
 
-## Future Improvements
+# 📖 How to Use
 
-- Chat with documents
-- Retrieval-Augmented Generation (RAG)
-- Export results as PDF
-- Export results as DOCX
-- Additional document formats
-- Improved OCR accuracy
+1. Launch the application.
+2. Enter your Gemini API key.
+3. Upload a PDF, Word document, or image.
+4. View the extracted text.
+5. Select any AI-powered feature:
+   - Summary
+   - Question Answering
+   - Flashcards
+   - MCQs
+   - Keywords
+   - Translation
+6. Download the generated output.
+
+# 📸 Screenshots
+
+## 🏠 Home Page
+
+![Home Page](assets/screenshots/home.png)
 
 ---
 
-## Developer
+## 📤 Upload Document
 
-**Riaz Aslam**
+![Upload](assets/screenshots/upload.png)
 
-Software Engineering Student
+---
 
-GitHub
+## 📄 AI Summary
+
+![Summary](assets/screenshots/summary.png)
+
+---
+
+## ❓ Question Answering
+
+![Question Answering](assets/screenshots/qa.png)
+
+---
+
+## 🧠 Flashcards
+
+![Flashcards](assets/screenshots/flashcards.png)
+
+---
+
+## ✅ MCQs
+
+![MCQs](assets/screenshots/mcqs.png)
+
+---
+
+## 🌍 Translation
+
+![Translation](assets/screenshots/translation.png)
+
+
+
+# 🎯 Use Cases
+
+- 📚 Students preparing for exams
+- 👨‍🏫 Teachers creating study material
+- 👨‍💼 Researchers analyzing reports
+- 📑 Professionals reviewing documents
+- 🌍 Users translating documents quickly
+
+---
+
+# 🚀 Future Improvements
+
+- 💬 Chat with Documents
+- 🧠 Retrieval-Augmented Generation (RAG)
+- 📄 Export Results as PDF
+- 📝 Export Results as DOCX
+- 🌐 Support More Languages
+- 📂 Additional File Formats
+- 📊 AI Insights Dashboard
+- 🔍 Semantic Search
+
+---
+
+# 👨‍💻 Developer
+
+## Riaz Aslam
+
+**Software Engineering Student**
+
+### GitHub
 
 https://github.com/riazaslam029
 
-LinkedIn
+### LinkedIn
 
 https://www.linkedin.com/in/riaz-aslam-0bb69b310/
 
 ---
 
-## License
+# ⭐ Support
 
-This project is licensed under the MIT License.
+If you found this project useful, please consider giving it a ⭐ on GitHub.
+
+Your support helps improve the project and motivates future development.
 
 ---
 
-If you found this project useful, consider giving it a ⭐ on GitHub.
+# 📜 License
+
+This project is licensed under the **MIT License**.
