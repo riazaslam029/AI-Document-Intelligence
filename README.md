@@ -175,44 +175,43 @@ Then paste your key into the application's sidebar when prompted.
 
 ## 🏠 Home Page
 
-![Home Page](assets/screenshots/home.png)
+![Home](assets/Screenshot/home.png)
 
 ---
 
-## 📤 Upload Document
+## 📄 Analyze Document
 
-![Upload](assets/screenshots/upload.png)
+![Analyze](assets/Screenshot/analyze.png)
 
 ---
 
 ## 📄 AI Summary
 
-![Summary](assets/screenshots/summary.png)
+![Summary](assets/Screenshot/summary.png)
 
 ---
 
 ## ❓ Question Answering
 
-![Question Answering](assets/screenshots/qa.png)
+![Question Answering](assets/Screenshot/question.png)
 
 ---
 
 ## 🧠 Flashcards
 
-![Flashcards](assets/screenshots/flashcards.png)
+![Flashcards](assets/Screenshot/flashcards.png)
 
 ---
 
-## ✅ MCQs
+## ✅ MCQ Generation
 
-![MCQs](assets/screenshots/mcqs.png)
+![MCQs](assets/Screenshot/mcq.png)
 
 ---
 
-## 🌍 Translation
+## ℹ️ About Page
 
-![Translation](assets/screenshots/translation.png)
-
+![About](assets/Screenshot/about.png)
 
 
 # 🎯 Use Cases
