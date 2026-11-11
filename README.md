@@ -1,266 +1,146 @@
-# 📄 AI Document Intelligence Suite
+# AI Document Intelligence
 
-> An AI-powered document analysis platform built with **Python**, **Streamlit**, and **Google Gemini AI** that enables users to analyze PDFs, Word documents, and images through intelligent summarization, question answering, OCR, translation, flashcards, and more.
+<div align="center">
 
----
+**Analyze, understand, and transform documents with AI.**
 
-## 🌐 Live Demo
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Streamlit-FF4B4B?logo=streamlit&logoColor=white)](https://ai-document-intelligence-fsomujrral6fehfzc7ue.streamlit.app/)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Powered by Gemini](https://img.shields.io/badge/AI-Google%20Gemini-4285F4?logo=google&logoColor=white)](https://ai.google.dev/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-2ea44f)](LICENSE)
 
-🔗 **Streamlit App:**  
-https://ai-document-intelligence-fsomujrral6fehfzc7uehp.streamlit.app/
+</div>
 
----
+AI Document Intelligence is a Streamlit application for extracting and understanding content from PDFs, Word documents, and images. It combines OCR and Google Gemini to provide practical tools for summarization, question answering, study material generation, keyword extraction, and translation.
 
 ## ✨ Features
 
-### 📂 Document Support
-- 📄 PDF Documents (.pdf)
-- 📝 Microsoft Word (.docx)
-- 🖼 Images (.png, .jpg, .jpeg)
+| Capability | Description |
+| --- | --- |
+| 📄 Multi-format input | Process PDF, DOCX, PNG, JPG, and JPEG files |
+| 🧾 Text extraction | Extract text from digital documents and images with OCR |
+| 📝 Summarization | Create concise summaries of uploaded documents |
+| 💬 Question answering | Ask questions and receive answers grounded in document content |
+| 🧠 Study tools | Generate flashcards and multiple-choice questions |
+| 🔑 Keyword extraction | Identify important terms and concepts |
+| 🌍 Translation | Translate extracted document content into other languages |
+| 📊 Document insights | Review extracted text and basic document statistics |
+| ⬇️ Export | Download generated results for later use |
 
-### 🤖 AI-Powered Analysis
-- 📑 Intelligent Document Summarization
-- ❓ Ask Questions About the Document
-- 🧠 Generate Study Flashcards
-- ✅ Generate Multiple Choice Questions (MCQs)
-- 🔑 Extract Important Keywords
-- 🌍 Translate Documents into Multiple Languages
+## 🚀 Try the live application
 
-### 📊 Additional Features
-- 📋 Automatic Text Extraction
-- 📈 Document Statistics
-- 💾 Download AI-generated Results
-- 🔐 Secure User-Provided Gemini API Key
-- 🎨 Clean & Responsive Streamlit Interface
+Use the hosted application without installing anything:
 
----
+**[Open AI Document Intelligence](https://ai-document-intelligence-fsomujrral6fehfzc7ue.streamlit.app/)**
 
-# 🚀 Technologies Used
+You will need a Google Gemini API key. The key is entered in the application and used only for the current session; it is not stored in this repository.
 
-| Category | Technologies |
-|----------|--------------|
-| Programming Language | Python |
-| Frontend | Streamlit |
-| AI Model | Google Gemini 2.5 Flash |
-| OCR | EasyOCR |
-| PDF Processing | PyMuPDF |
-| Word Processing | python-docx |
-| Image Processing | Pillow |
-| Environment Variables | python-dotenv |
+## 🛠️ Technology stack
 
----
+| Layer | Technology |
+| --- | --- |
+| Application | Python and Streamlit |
+| Generative AI | Google Gemini 2.5 Flash via `google-genai` |
+| OCR | EasyOCR and OpenCV |
+| PDF processing | PyMuPDF |
+| Word processing | `python-docx` |
+| Image processing | Pillow |
+| Data and utilities | NumPy, pandas, scikit-image, python-dotenv |
 
-# 📁 Project Structure
+## ⚙️ Run locally
 
-```text
-AI-Document-Intelligence/
-│
-├── app.py
-├── requirements.txt
-├── README.md
-│
-├── services/
-│   ├── summarizer.py
-│   ├── qa.py
-│   ├── flashcards.py
-│   ├── mcq.py
-│   ├── keywords.py
-│   ├── translator.py
-│   ├── gemini_client.py
-│   └── ocr_service.py
-│
-├── utils/
-│   ├── file_handler.py
-│   ├── pdf_loader.py
-│   ├── docx_loader.py
-│   ├── ocr.py
-│   └── ui_helpers.py
-│
-├── views/
-│   ├── home.py
-│   ├── analyze.py
-│   └── about.py
-│
-└── uploads/
-```
+### Prerequisites
 
----
+- Python 3.10 or newer
+- A Google Gemini API key from [Google AI Studio](https://aistudio.google.com/app/apikey)
 
-# ⚙️ Installation
-
-## 1️⃣ Clone the Repository
+### Installation
 
 ```bash
 git clone https://github.com/riazaslam029/AI-Document-Intelligence.git
-```
-
----
-
-## 2️⃣ Navigate to the Project
-
-```bash
 cd AI-Document-Intelligence
+
+python -m venv .venv
 ```
 
----
-
-## 3️⃣ Create a Virtual Environment
+Activate the virtual environment:
 
 ```bash
-python -m venv venv
+# macOS/Linux
+source .venv/bin/activate
+
+# Windows PowerShell
+.venv\Scripts\Activate.ps1
 ```
 
-### Activate Environment
-
-**Windows**
-
-```bash
-venv\Scripts\activate
-```
-
-**Linux / macOS**
-
-```bash
-source venv/bin/activate
-```
-
----
-
-## 4️⃣ Install Dependencies
+Install dependencies and start Streamlit:
 
 ```bash
 pip install -r requirements.txt
-```
-
----
-
-## 5️⃣ Run the Application
-
-```bash
 streamlit run app.py
 ```
 
-The application will open in your default browser.
+Open the local URL shown by Streamlit, enter your Gemini API key in the sidebar, and upload a supported document.
 
----
+## 🧭 How it works
 
-# 🔑 Gemini API Key
+1. Upload a PDF, DOCX, or image.
+2. The application extracts text using the appropriate document loader or OCR pipeline.
+3. Select an analysis tool such as summary, Q&A, flashcards, MCQs, keywords, or translation.
+4. Review the generated result and download it when needed.
 
-This project **does not store or expose any API keys**.
+## 📁 Project structure
 
-Simply obtain your free Gemini API key from:
+```text
+AI-Document-Intelligence/
+├── app.py                    # Streamlit entry point
+├── requirements.txt          # Python dependencies
+├── services/                 # AI-powered analysis services
+│   ├── flashcards.py
+│   ├── gemini_client.py
+│   ├── keywords.py
+│   ├── mcq.py
+│   ├── ocr_service.py
+│   ├── qa.py
+│   ├── summarizer.py
+│   └── translator.py
+├── utils/                    # File loading, OCR, and UI helpers
+└── views/                    # Home, analysis, and about pages
+```
 
-https://aistudio.google.com/app/apikey
+## 🔐 Security and privacy
 
-Then paste your key into the application's sidebar when prompted.
+- Never commit API keys or other secrets.
+- API keys should be entered through the application sidebar or supplied through a secure deployment configuration.
+- Uploaded documents are used for the current analysis workflow and should not contain sensitive information unless your deployment and provider policies allow it.
 
----
+## 🗺️ Roadmap
 
-# 📖 How to Use
+- Chat with documents
+- Retrieval-augmented generation (RAG)
+- Semantic search
+- PDF and DOCX result exports
+- Additional file formats and language support
+- AI-powered insights dashboard
 
-1. Launch the application.
-2. Enter your Gemini API key.
-3. Upload a PDF, Word document, or image.
-4. View the extracted text.
-5. Select any AI-powered feature:
-   - Summary
-   - Question Answering
-   - Flashcards
-   - MCQs
-   - Keywords
-   - Translation
-6. Download the generated output.
+## 🤝 Contributing
 
-# 📸 Screenshots
+Contributions, suggestions, and issue reports are welcome. Before opening a pull request:
 
-## 🏠 Home Page
+1. Create a focused branch from `main`.
+2. Keep changes scoped and document user-facing behavior.
+3. Run the relevant tests before submitting.
+4. Include a clear description of the problem and solution.
 
-![Home](assets/Screenshot/home.png)
+## 👨‍💻 Maintainer
 
----
+**Riaz Aslam** — Software Engineering Student
 
-## 📄 Analyze Document
+- GitHub: [@riazaslam029](https://github.com/riazaslam029)
+- LinkedIn: [Riaz Aslam](https://www.linkedin.com/in/riaz-aslam-0bb69b310/)
 
-![Analyze](assets/Screenshot/analyze.png)
+## 📄 License
 
----
+This project is released under the [MIT License](LICENSE).
 
-## 📄 AI Summary
-
-![Summary](assets/Screenshot/summary.png)
-
----
-
-## ❓ Question Answering
-
-![Question Answering](assets/Screenshot/question.png)
-
----
-
-## 🧠 Flashcards
-
-![Flashcards](assets/Screenshot/flashcards.png)
-
----
-
-## ✅ MCQ Generation
-
-![MCQs](assets/Screenshot/mcq.png)
-
----
-
-## ℹ️ About Page
-
-![About](assets/Screenshot/about.png)
-
-
-# 🎯 Use Cases
-
-- 📚 Students preparing for exams
-- 👨‍🏫 Teachers creating study material
-- 👨‍💼 Researchers analyzing reports
-- 📑 Professionals reviewing documents
-- 🌍 Users translating documents quickly
-
----
-
-# 🚀 Future Improvements
-
-- 💬 Chat with Documents
-- 🧠 Retrieval-Augmented Generation (RAG)
-- 📄 Export Results as PDF
-- 📝 Export Results as DOCX
-- 🌐 Support More Languages
-- 📂 Additional File Formats
-- 📊 AI Insights Dashboard
-- 🔍 Semantic Search
-
----
-
-# 👨‍💻 Developer
-
-## Riaz Aslam
-
-**Software Engineering Student**
-
-### GitHub
-
-https://github.com/riazaslam029
-
-### LinkedIn
-
-https://www.linkedin.com/in/riaz-aslam-0bb69b310/
-
----
-
-# ⭐ Support
-
-If you found this project useful, please consider giving it a ⭐ on GitHub.
-
-Your support helps improve the project and motivates future development.
-
----
-
-# 📜 License
-
-This project is licensed under the **MIT License**.
+If you find the project useful, consider giving it a ⭐ on GitHub.
